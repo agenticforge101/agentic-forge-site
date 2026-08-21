@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Agentic Forge — practical AI agents, automation, and evaluation systems built for real work.">
+<meta name="theme-color" content="#020508">
+<title>Agentic Forge</title>
+<style>
+  :root{
+    --bg:#020508; --bg2:#050d14;
+    --text:#eef7f8; --muted:#93aeb5;
+    --cyan:#35f0e8; --violet:#7c6bff; --ember:#ff8a4c;
+    --line:rgba(255,255,255,.08); --line2:rgba(53,240,232,.35);
+    --glass:rgba(255,255,255,.03);
+    --max:1200px; --r:22px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:'Segoe UI',Inter,system-ui,-apple-system,sans-serif;
+    line-height:1.6; overflow-x:hidden; position:relative;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; z-index:-2;
+    background:
+      radial-gradient(700px 500px at 85% -5%, rgba(53,240,232,.16), transparent 60%),
+      radial-gradient(600px 500px at 5% 30%, rgba(124,107,255,.14), transparent 60%),
+      radial-gradient(500px 400px at 60% 100%, rgba(255,138,76,.09), transparent 60%);
+  }
+  a{color:inherit; text-decoration:none;}
+  .wrap{width:min(var(--max), calc(100% - 44px)); margin:0 auto;}
+  ::selection{background:var(--cyan); color:#000;}
+
+  /* NAV */
+  header{position:sticky; top:0; z-index:50; backdrop-filter:blur(20px); background:rgba(2,5,8,.6); border-bottom:1px solid var(--line);}
+  .nav{height:82px; display:flex; align-items:center; justify-content:space-between;}
+  .brand{display:flex; align-items:center; gap:12px; font-weight:800; font-size:1.15rem; letter-spacing:-.03em;}
+  .logo{width:38px; height:38px; position:relative; display:grid; place-items:center;}
+  .logo svg{width:100%; height:100%;}
+  .navlinks{display:flex; align-items:center; gap:32px; font-size:.92rem; color:var(--muted);}
+  .navlinks a:not(.btn):hover{color:var(--cyan);}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; padding:13px 22px; border-radius:100px;
+    background:linear-gradient(135deg, var(--cyan), var(--violet)); color:#010305; font-weight:800; font-size:.9rem;
+    box-shadow:0 8px 30px rgba(53,240,232,.25); transition:.25s;
+  }
+  .btn:hover{transform:translateY(-2px) scale(1.02); box-shadow:0 12px 40px rgba(53,240,232,.4);}
+  .btn.ghost{background:transparent; border:1px solid var(--line); color:var(--text); box-shadow:none;}
+  .btn.ghost:hover{border-color:var(--cyan); color:var(--cyan); transform:none;}
+
+  /* HERO */
+  .hero{position:relative; padding:120px 0 90px; text-align:center; overflow:hidden;}
+  .tag{
+    display:inline-flex; align-items:center; gap:10px; padding:8px 18px; border-radius:100px;
+    border:1px solid var(--line2); background:rgba(53,240,232,.06); font-size:.82rem; letter-spacing:.02em;
+    color:var(--cyan); font-weight:700; margin-bottom:28px;
+  }
+  .dot{width:7px; height:7px; border-radius:50%; background:var(--ember); box-shadow:0 0 0 5px rgba(255,138,76,.18); animation:blink 2.4s infinite;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:.4;}}
+  h1{
+    font-size:clamp(3.2rem, 8vw, 7.8rem); font-weight:800; letter-spacing:-.05em; line-height:.95;
+    max-width:1000px; margin:0 auto 26px;
+  }
+  .grad-text{background:linear-gradient(120deg, var(--cyan), var(--violet) 60%, var(--ember)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .lead{max-width:600px; margin:0 auto; color:var(--muted); font-size:clamp(1.05rem,1.6vw,1.25rem);}
+  .hero-actions{display:flex; justify-content:center; gap:14px; margin-top:38px; flex-wrap:wrap;}
+
+  /* STAGE - visual */
+  .stage{position:relative; height:400px; margin-top:70px; display:grid; place-items:center;}
+  .ring{position:absolute; border:1px solid var(--line); border-radius:50%;}
+  .ring.r1{width:380px; height:380px; animation:rot 40s linear infinite;}
+  .ring.r2{width:280px; height:280px; border-color:rgba(124,107,255,.28); animation:rot 26s linear infinite reverse;}
+  .ring.r3{width:180px; height:180px; border-color:rgba(255,138,76,.28); animation:rot 18s linear infinite;}
+  @keyframes rot{to{transform:rotate(360deg);}}
+  .core{
+    width:120px; height:120px; border-radius:32px; display:grid; place-items:center;
+    background:linear-gradient(145deg, rgba(53,240,232,.18), rgba(124,107,255,.14));
+    border:1px solid var(--line2); box-shadow:0 0 70px rgba(53,240,232,.22), inset 0 0 30px rgba(53,240,232,.08);
+    animation:float 5s ease-in-out infinite;
+  }
+  @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+  .core svg{width:52px; height:52px;}
+  .chip{
+    position:absolute; padding:12px 16px; border-radius:14px; background:var(--glass); backdrop-filter:blur(14px);
+    border:1px solid var(--line); font-size:.8rem; color:var(--muted); animation:float 6s ease-in-out infinite;
+  }
+  .chip b{display:block; color:var(--text); font-size:.92rem;}
+  .chip.c1{top:10px; left:8%; animation-delay:.4s;}
+  .chip.c2{bottom:20px; right:6%; animation-delay:1.1s;}
+  .chip.c3{top:40%; right:0; animation-delay:1.9s;}
+
+  /* MARQUEE */
+  .marquee{border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:22px 0; overflow:hidden; white-space:nowrap;}
+  .marquee-track{display:inline-flex; gap:60px; animation:scroll 26s linear infinite; font-weight:700; letter-spacing:.03em; color:var(--muted); font-size:.95rem;}
+  .marquee-track span{color:var(--cyan);}
+  @keyframes scroll{from{transform:translateX(0);} to{transform:translateX(-50%);}}
+
+  /* SECTIONS */
+  section{padding:110px 0;}
+  .label{color:var(--cyan); text-transform:uppercase; letter-spacing:.16em; font-size:.75rem; font-weight:800;}
+  h2{font-size:clamp(2.3rem,4.6vw,4.2rem); letter-spacing:-.045em; line-height:1.02; margin:12px 0 16px;}
+  .intro{max-width:640px; color:var(--muted); font-size:1.08rem;}
+
+  .cardgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:48px;}
+  .card{
+    position:relative; padding:32px; border-radius:var(--r); background:var(--glass); border:1px solid var(--line);
+    overflow:hidden; transition:.3s; min-height:280px;
+  }
+  .card:hover{border-color:var(--line2); transform:translateY(-6px);}
+  .card::after{content:""; position:absolute; width:200px; height:200px; right:-100px; bottom:-110px; background:radial-gradient(circle, rgba(53,240,232,.15), transparent 70%); pointer-events:none;}
+  .cnum{font-size:.78rem; color:var(--ember); font-weight:800; letter-spacing:.1em;}
+  .card h3{font-size:1.3rem; margin:22px 0 10px; letter-spacing:-.02em;}
+  .card p{color:var(--muted); font-size:.96rem;}
+
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center;}
+  .timeline{display:grid; gap:0;}
+  .titem{display:grid; grid-template-columns:50px 1fr; gap:20px; padding:26px 0; border-bottom:1px solid var(--line); position:relative;}
+  .titem:last-child{border-bottom:none;}
+  .tnum{width:44px; height:44px; border-radius:50%; border:1px solid var(--line2); display:grid; place-items:center; font-weight:800; color:var(--cyan); font-size:.95rem;}
+  .titem h4{font-size:1.08rem; margin-bottom:6px;}
+  .titem p{color:var(--muted); font-size:.92rem;}
+
+  .glow-panel{
+    padding:44px; border-radius:32px; background:linear-gradient(150deg, rgba(53,240,232,.08), rgba(124,107,255,.05));
+    border:1px solid var(--line2); position:relative; overflow:hidden;
+  }
+  .glow-panel::before{content:""; position:absolute; width:300px; height:300px; top:-140px; right:-140px; background:radial-gradient(circle, rgba(255,138,76,.14), transparent 70%);}
+  .glow-panel p{position:relative; font-size:clamp(1.5rem,2.6vw,2.2rem); letter-spacing:-.03em; line-height:1.25;}
+  .glow-panel small{position:relative; display:block; margin-top:26px; color:var(--cyan); font-weight:800;}
+
+  .cta{text-align:center; padding:130px 0; position:relative;}
+  .cta p{max-width:560px; margin:0 auto 30px; color:var(--muted);}
+
+  footer{border-top:1px solid var(--line); padding:36px 0; color:var(--muted); font-size:.86rem;}
+  .frow{display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px;}
+  .frow a:hover{color:var(--cyan);}
+
+  @media(max-width:880px){
+    .navlinks a:not(.btn){display:none;}
+    .cardgrid, .split{grid-template-columns:1fr; gap:20px;}
+    section{padding:76px 0;}
+    .stage{height:320px;}
+    .ring.r1{width:280px; height:280px;}
+    .ring.r2{width:200px; height:200px;}
+    .ring.r3{width:130px; height:130px;}
+    .chip{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top">
+      <span class="logo">
+        <svg viewBox="0 0 48 48" fill="none"><polygon points="24,2 44,13 44,35 24,46 4,35 4,13" stroke="#35f0e8" stroke-width="1.5"/><polygon points="24,14 32,32 16,32" fill="#35f0e8" opacity=".9"/></svg>
+      </span>
+      Agentic Forge
+    </a>
+    <div class="navlinks">
+      <a href="#what">What we build</a>
+      <a href="#approach">Approach</a>
+      <a href="#contact" class="btn">Start a project</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="wrap">
+      <div class="tag"><span class="dot"></span> PRACTICAL AGENTIC AI</div>
+      <h1>Forge intelligence<br><span class="grad-text">that actually works.</span></h1>
+      <p class="lead">Agentic Forge designs AI agents, automation, and evaluation systems built for real workflows — not demos that disappear after launch.</p>
+      <div class="hero-actions">
+        <a class="btn" href="#contact">Work with us →</a>
+        <a class="btn ghost" href="#what">See what we build</a>
+      </div>
+
+      <div class="stage">
+        <div class="ring r1"></div>
+        <div class="ring r2"></div>
+        <div class="ring r3"></div>
+        <div class="core">
+          <svg viewBox="0 0 48 48" fill="none"><path d="M12 34 L24 6 L36 34" stroke="#35f0e8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="28" r="3" fill="#ff8a4c"/></svg>
+        </div>
+        <div class="chip c1"><b>Agents</b>Act with context</div>
+        <div class="chip c2"><b>Automation</b>Move work forward</div>
+        <div class="chip c3"><b>Evaluation</b>Measure what matters</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>AI AGENTS</span> · AUTOMATION · <span>MODEL EVALUATION</span> · MULTILINGUAL AI · <span>ROBOTICS</span> · GENERATIVE MEDIA · <span>AI AGENTS</span> · AUTOMATION · <span>MODEL EVALUATION</span> · MULTILINGUAL AI · <span>ROBOTICS</span> · GENERATIVE MEDIA
+    </div>
+  </div>
+
+  <section id="what">
+    <div class="wrap">
+      <div class="label">What we forge</div>
+      <h2>Practical intelligence,<br>built to move.</h2>
+      <p class="intro">We focus on AI that is useful, measurable, and designed around real workflows — engineered with rigour, not hype.</p>
+      <div class="cardgrid">
+        <div class="card">
+          <div class="cnum">01 / AGENTS</div>
+          <h3>AI Agents</h3>
+          <p>Purpose-built assistants that understand context, use tools, and carry tasks from intention to outcome.</p>
+        </div>
+        <div class="card">
+          <div class="cnum">02 / SYSTEMS</div>
+          <h3>Automation</h3>
+          <p>Connected workflows that remove repetitive work and keep teams focused on what actually matters.</p>
+        </div>
+        <div class="card">
+          <div class="cnum">03 / RIGOUR</div>
+          <h3>AI Quality & Evaluation</h3>
+          <p>Structured evaluation for accuracy, safety, and the edge cases that determine whether people trust a system.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="approach">
+    <div class="wrap split">
+      <div>
+        <div class="label">How we work</div>
+        <h2>Build with intent.<br>Test with rigour.</h2>
+        <p class="intro">Great AI is not just powerful — it is understandable, dependable, and built around the people who rely on it.</p>
+      </div>
+      <div class="timeline">
+        <div class="titem"><div class="tnum">01</div><div><h4>Find the real problem</h4><p>Start with the workflow, friction, and measurable outcome — not the tool.</p></div></div>
+        <div class="titem"><div class="tnum">02</div><div><h4>Forge the smallest useful system</h4><p>Design the agent or automation loop that creates immediate, visible value.</p></div></div>
+        <div class="titem"><div class="tnum">03</div><div><h4>Evaluate, refine, scale</h4><p>Test quality, safety, and reliability rigorously before expanding what works.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="glow-panel">
+        <p>"Agentic AI should make people more capable — not make work more complicated."</p>
+        <small>— Agentic Forge</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" id="contact">
+    <div class="wrap">
+      <div class="label">Agentic Forge</div>
+      <h2>Have a workflow<br>worth forging?</h2>
+      <p>Tell us what you want to make easier, faster, safer, or more intelligent.</p>
+      <a class="btn" href="mailto:hello@agenticforge.com.au?subject=Let%27s%20forge%20something">Get in touch →</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap frow">
+    <span>© 2026 Agentic Forge — Sydney, Australia</span>
+    <a href="https://x.com/AgenticForge" target="_blank" rel="noreferrer">Follow on X ↗</a>
+  </div>
+</footer>
+
+</body>
+</html>
